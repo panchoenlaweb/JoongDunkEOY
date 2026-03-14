@@ -134,11 +134,13 @@
 
         .hero-title {
             font-family: 'Cinzel', serif;
-            font-size: clamp(3.5rem, 14vw, 10rem);
+            font-size: clamp(2.6rem, 13vw, 10rem);
             font-weight: 900;
             letter-spacing: .12em;
-            line-height: .9;
+            line-height: .95;
             text-transform: uppercase;
+            word-break: keep-all;
+            overflow-wrap: normal;
             background: linear-gradient(140deg, #fff 0%, #bbb 40%, #fff 65%, #999 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -560,7 +562,7 @@
            MOBILE — 400px (muy pequeño)
         ══════════════════════════════ */
         @media (max-width: 400px) {
-            .hero-title { letter-spacing: .06em; }
+            .hero-title { letter-spacing: .04em; font-size: clamp(2rem, 11.5vw, 10rem); }
             .hero-subtitle { font-size: clamp(.85rem, 5.5vw, 1.4rem); letter-spacing: .12em; }
             .date-badge { padding: 8px 14px; font-size: .72rem; }
             .t-sep { font-size: clamp(1.4rem, 5vw, 2rem); }
