@@ -477,10 +477,94 @@
         }
         .hashtag { color: var(--red-light); font-weight: 600; }
 
-        /* ── MISC ── */
+        /* ══════════════════════════════
+           MOBILE — 640px
+        ══════════════════════════════ */
         @media (max-width: 640px) {
-            section { padding: 60px 0; }
-            .section-title { margin-bottom: 40px; }
+            section { padding: 56px 0; }
+            .wrapper { padding: 0 16px; }
+
+            .section-title {
+                letter-spacing: .18em;
+                margin-bottom: 36px;
+            }
+
+            /* Hero */
+            .hero-inner { padding: 80px 18px 40px; }
+
+            .gmmtv-badge { font-size: .6rem; letter-spacing: .3em; padding: 4px 12px; }
+
+            .hero-subtitle { letter-spacing: .2em; }
+            .hero-fancon   { letter-spacing: .35em; font-size: .65rem; }
+
+            .hero-meta {
+                font-size: .88rem;
+                gap: 6px;
+            }
+            .hero-meta span {
+                display: flex; flex-wrap: wrap;
+                justify-content: center; gap: 4px;
+                text-align: center;
+            }
+
+            /* Botones full-width en mobile */
+            .hero-btns {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 0 8px;
+            }
+            .btn-reserve,
+            .btn-stream {
+                width: 100%;
+                clip-path: none;
+                padding: 16px 20px;
+                font-size: .78rem;
+                letter-spacing: .18em;
+            }
+            .btn-stream-wrap { width: 100%; }
+            /* Tooltip en mobile: debajo del botón, sin nowrap */
+            .btn-stream-tip {
+                white-space: normal;
+                text-align: center;
+                width: 100%;
+                left: 0; transform: none;
+                top: calc(100% + 8px); bottom: auto;
+                font-size: .72rem;
+            }
+
+            /* Countdown */
+            .cd-card { padding: 24px 14px; }
+            .cd-day-label { font-size: .65rem; letter-spacing: .18em; }
+            .t-block { min-width: 46px; }
+            .t-lbl { font-size: .52rem; }
+
+            /* Timezones */
+            .tz-subtitle { font-size: .78rem; letter-spacing: .06em; margin-top: -28px; }
+            .tz-name { font-size: .82rem; }
+            .tz-t1 { font-size: .64rem; }
+            .tz-t2 { font-size: .56rem; }
+
+            /* Prices */
+            .price-opts { max-width: 100%; gap: 20px; padding: 0 4px; }
+            .p-usd { font-size: 2.2rem; }
+
+            /* Table */
+            .ctbl { font-size: .82rem; }
+            .ctbl th,
+            .ctbl td { padding: 9px 12px; }
+            .c-flag { font-size: .95rem; margin-right: 5px; }
+        }
+
+        /* ══════════════════════════════
+           MOBILE — 400px (muy pequeño)
+        ══════════════════════════════ */
+        @media (max-width: 400px) {
+            .hero-title { letter-spacing: .06em; }
+            .hero-subtitle { font-size: clamp(.85rem, 5.5vw, 1.4rem); letter-spacing: .12em; }
+            .date-badge { padding: 8px 14px; font-size: .72rem; }
+            .t-sep { font-size: clamp(1.4rem, 5vw, 2rem); }
+            .ctbl th { font-size: .58rem; letter-spacing: .1em; }
         }
     </style>
 </head>
