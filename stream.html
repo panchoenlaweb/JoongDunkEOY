@@ -491,19 +491,56 @@
 })();
 
 /* ═══════════════════════════════════════
-   PASSWORD  — cambia 'eyesonyou2026' por tu clave real
+   PASSWORD — hashes SHA-256 únicamente.
+   Día 1 → clave de Joong  | Día 2 → clave de Dunk
+   Nunca se almacena la clave en texto plano.
 ═══════════════════════════════════════ */
-const ACCESS_KEY = 'eyesonyou2026';
+const HASHES = {
+    '2b851578e00705705420fac92d0de48b8d72583ad658d80309b6383ea5a1b334': 1,
+    'fec5b430ff367d2a0ec33955f6eb3cb12c3ba712750e8d93fcf6f9a5a8d6879b': 2
+};
 
-function checkPwd() {
-    const val = document.getElementById('pwd-input').value.trim();
+async function sha256(str) {
+    const buf = await crypto.subtle.digest(
+        'SHA-256',
+        new TextEncoder().encode(str)
+    );
+    return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+function unlockDay(day) {
+    sessionStorage.setItem('jd_access', String(day));
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    applyDayRestriction(day);
+    switchDay(day);
+}
+
+function applyDayRestriction(day) {
+    // Lock the tab for the other day
+    const otherTab = document.getElementById(day === 1 ? 'tab-d2' : 'tab-d1');
+    if (otherTab) {
+        otherTab.style.opacity = '.25';
+        otherTab.style.cursor  = 'not-allowed';
+        otherTab.style.pointerEvents = 'none';
+        otherTab.title = 'No tienes acceso a este día';
+    }
+}
+
+async function checkPwd() {
+    const val   = document.getElementById('pwd-input').value.trim();
     const errEl = document.getElementById('gate-err');
-    const inp = document.getElementById('pwd-input');
+    const inp   = document.getElementById('pwd-input');
 
-    if (val === ACCESS_KEY) {
-        sessionStorage.setItem('jd_access', '1');
-        document.getElementById('gate').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
+    if (!val) return;
+
+    const hash = await sha256(val);
+    const day  = HASHES[hash];
+
+    if (day) {
+        unlockDay(day);
         errEl.textContent = '';
     } else {
         errEl.textContent = 'Clave incorrecta. Inténtalo de nuevo.';
@@ -514,9 +551,11 @@ function checkPwd() {
 }
 
 // Auto-unlock if already authenticated this session
-if (sessionStorage.getItem('jd_access') === '1') {
+const savedDay = parseInt(sessionStorage.getItem('jd_access'), 10);
+if (savedDay === 1 || savedDay === 2) {
     document.getElementById('gate').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
+    // applyDayRestriction is called after switchDay is defined — see INIT section
 }
 
 /* ═══════════════════════════════════════
@@ -613,7 +652,9 @@ function buildTZList(ev) {
 /* ═══════════════════════════════════════
    INIT
 ═══════════════════════════════════════ */
-switchDay(1);
+const _initDay = (savedDay === 1 || savedDay === 2) ? savedDay : 1;
+switchDay(_initDay);
+if (savedDay === 1 || savedDay === 2) applyDayRestriction(savedDay);
 setInterval(() => updateLiveIndicator(activeDay===1 ? EV1 : EV2), 30000);
 </script>
 </body>
