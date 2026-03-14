@@ -184,9 +184,34 @@
             letter-spacing: .08em; max-width: 340px;
         }
         .countdown-inline {
-            font-family: 'Orbitron', monospace; font-size: 1.4rem;
-            color: var(--red-light); margin: 18px 0 0;
-            text-shadow: 0 0 14px var(--red-glow);
+            display: flex; justify-content: center; gap: 10px;
+            margin: 22px 0 0;
+            flex-wrap: wrap;
+        }
+        .cd-block {
+            display: flex; flex-direction: column; align-items: center;
+            min-width: 62px;
+        }
+        .cd-num {
+            font-family: 'Orbitron', monospace; font-size: 2rem; font-weight: 700;
+            color: var(--red-light); line-height: 1;
+            text-shadow: 0 0 16px var(--red-glow);
+        }
+        .cd-lbl {
+            font-family: 'Orbitron', monospace; font-size: .52rem;
+            letter-spacing: .2em; color: var(--muted);
+            text-transform: uppercase; margin-top: 5px;
+        }
+        .cd-sep {
+            font-family: 'Orbitron', monospace; font-size: 1.6rem;
+            color: var(--red); line-height: 1; margin-top: 4px;
+            animation: blink 1s steps(1) infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        .cd-live-msg {
+            font-family: 'Orbitron', monospace; font-size: .9rem;
+            color: #0f0; letter-spacing: .2em; margin-top: 18px;
+            text-shadow: 0 0 10px rgba(0,255,0,.4);
         }
 
         /* INFO STRIP */
@@ -288,7 +313,10 @@
             .placeholder-icon { font-size: 2.4rem; margin-bottom: 12px; }
             .placeholder-title { font-size: .92rem; letter-spacing: .12em; }
             .placeholder-sub { font-size: .78rem; }
-            .countdown-inline { font-size: 1.1rem; }
+            .cd-num { font-size: 1.4rem; }
+            .cd-lbl { font-size: .46rem; }
+            .cd-sep { font-size: 1.2rem; }
+            .cd-block { min-width: 44px; }
 
             /* Info strip */
             .info-strip { flex-direction: column; gap: 4px; padding: 12px 16px; }
@@ -377,7 +405,15 @@
                     <div class="placeholder-icon">📡</div>
                     <h2 class="placeholder-title">La transmisión aún no ha comenzado</h2>
                     <p class="placeholder-sub">El stream estará disponible el <b>05 de Abril a las 5:00 PM Bangkok</b>. Vuelve en:</p>
-                    <div class="countdown-inline" id="mini-cd">--:--:--</div>
+                    <div class="countdown-inline" id="mini-cd">
+                        <div class="cd-block"><span class="cd-num" id="mc-d">--</span><span class="cd-lbl">días</span></div>
+                        <span class="cd-sep">:</span>
+                        <div class="cd-block"><span class="cd-num" id="mc-h">--</span><span class="cd-lbl">horas</span></div>
+                        <span class="cd-sep">:</span>
+                        <div class="cd-block"><span class="cd-num" id="mc-m">--</span><span class="cd-lbl">min</span></div>
+                        <span class="cd-sep">:</span>
+                        <div class="cd-block"><span class="cd-num" id="mc-s">--</span><span class="cd-lbl">seg</span></div>
+                    </div>
                 </div>
                 <!-- Vimeo Live embed — reemplaza EVENT_ID con tu ID de Vimeo Live -->
                 <!-- <iframe
@@ -438,8 +474,7 @@
                 <p>
                     La transmisión se realiza en <b>Vimeo Live</b>.<br><br>
                     ✅ Resolución hasta <b>1080p</b><br>
-                    ✅ Compatible con celular, tablet y PC<br>
-                    ✅ Subtítulos disponibles<br><br>
+                    ✅ Compatible con celular, tablet y PC<br><br>
                     Si tienes problemas con el stream, recarga la página
                     o intenta en otro navegador (Chrome / Firefox recomendados).
                 </p>
@@ -603,17 +638,19 @@ function updateLiveIndicator(ev) {
    MINI COUNTDOWN (placeholder)
 ═══════════════════════════════════════ */
 function tickMini() {
-    const el = document.getElementById('mini-cd');
-    if (!el) return;
     const diff = EV1 - Date.now();
-    if (diff <= 0) { el.textContent = '¡EN VIVO AHORA!'; return; }
-    const h = Math.floor(diff/3600000);
-    const m = Math.floor((diff%3600000)/60000);
-    const s = Math.floor((diff%60000)/1000);
-    el.textContent =
-        String(h).padStart(2,'0') + ':' +
-        String(m).padStart(2,'0') + ':' +
-        String(s).padStart(2,'0');
+    if (diff <= 0) {
+        const cd = document.getElementById('mini-cd');
+        if (cd) cd.innerHTML = '<div class="cd-live-msg">🔴 ¡EN VIVO AHORA!</div>';
+        return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000)  / 60000);
+    const s = Math.floor((diff % 60000)    / 1000);
+    const p = n => String(n).padStart(2,'0');
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = p(v); };
+    set('mc-d', d); set('mc-h', h); set('mc-m', m); set('mc-s', s);
 }
 tickMini(); setInterval(tickMini, 1000);
 
