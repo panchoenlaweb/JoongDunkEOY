@@ -195,6 +195,44 @@
         }
         .hero-meta b { color: var(--red-light); }
 
+        /* ── HERO BUTTONS ── */
+        .hero-btns {
+            display: flex; gap: 16px; justify-content: center;
+            flex-wrap: wrap; margin-top: 32px;
+        }
+        .btn-reserve {
+            font-family: 'Orbitron', monospace;
+            font-size: .82rem; letter-spacing: .25em; text-transform: uppercase;
+            padding: 15px 36px;
+            background: var(--red);
+            color: #fff; border: none; cursor: pointer;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            transition: background .25s, box-shadow .25s;
+        }
+        .btn-reserve:hover {
+            background: var(--red-light);
+            box-shadow: 0 0 28px rgba(255,50,50,.5);
+        }
+        .btn-stream {
+            font-family: 'Orbitron', monospace;
+            font-size: .82rem; letter-spacing: .25em; text-transform: uppercase;
+            padding: 15px 36px;
+            background: transparent;
+            color: #555; border: 1px solid #333; cursor: not-allowed;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+        }
+        .btn-stream .lock-icon { margin-right: 8px; }
+        .btn-stream-wrap { position: relative; display: inline-block; }
+        .btn-stream-tip {
+            display: none; position: absolute; bottom: calc(100% + 10px); left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a; border: 1px solid var(--border);
+            color: #aaa; font-family: 'Rajdhani', sans-serif;
+            font-size: .75rem; letter-spacing: .06em;
+            padding: 7px 14px; white-space: nowrap; pointer-events: none; z-index: 10;
+        }
+        .btn-stream-wrap:hover .btn-stream-tip { display: block; }
+
         .scroll-hint {
             position: absolute; bottom: 32px; left: 50%;
             transform: translateX(-50%); z-index: 2;
@@ -475,6 +513,16 @@
         <div class="hero-meta">
             <span>📍 <b>Union Hall FL.6, Union Mall</b> &nbsp;·&nbsp; Bangkok, Thailand</span>
             <span>⏰ <b>4:00 PM</b> &nbsp;Hora Bangkok (ICT · UTC+7)</span>
+        </div>
+
+        <div class="hero-btns">
+            <button class="btn-reserve" onclick="document.getElementById('tickets').scrollIntoView({behavior:'smooth'})">🎟 Reservar Entrada</button>
+            <div class="btn-stream-wrap">
+                <button class="btn-stream" disabled onclick="window.location.href='stream.html'">
+                    <span class="lock-icon">🔒</span>Ver Transmisión
+                </button>
+                <div class="btn-stream-tip">Disponible el 05 de Abril a las 4:00 PM Bangkok</div>
+            </div>
         </div>
     </div>
     <div class="scroll-hint" aria-hidden="true"><span></span></div>
